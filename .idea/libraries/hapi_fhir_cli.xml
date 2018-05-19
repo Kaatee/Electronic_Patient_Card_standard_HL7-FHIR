@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="hapi-fhir-cli">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/Documents/hapi-fhir-client/hapi-fhir-cli.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/Documents/hapi-fhir-client/hapi-fhir-cli.jar!/" />
+    </SOURCES>
+  </library>
+</component>

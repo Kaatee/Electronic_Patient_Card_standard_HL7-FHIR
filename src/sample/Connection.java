@@ -4,10 +4,12 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.model.dstu2.resource.Bundle;
 import ca.uhn.fhir.model.dstu2.resource.Patient;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import java.util.ArrayList;
 
-public class Connection {
+public class Connection {//implements Runnable {
 
     private String serverBase;
     private IGenericClient client;
@@ -64,19 +66,16 @@ public class Connection {
         }
 
         System.out.println("Pacjentow po wyszukiwaniu: " + patientList.size());
-//        for (Iterator<Patient> it = patientList.iterator(); it.hasNext(); ) {
-//            Patient f = it.next();
-//         ;
-//            System.out.println(f.getName());
-//
-//        }
-//        patientList.forEach((myPatient)->{   System.out.println("--- PATIENT  ---");
-//            System.out.println(myPatient.getName());});
-
-
-
 
     }
+//
+//    public void run() {
+//        makeResult();
+//        System.out.println("Thread ended:::"+Thread.currentThread().getName());
+//
+//    }
+
+
 
 
     public ArrayList<Patient> getPatientList() {

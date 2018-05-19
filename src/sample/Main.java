@@ -20,11 +20,14 @@ public class Main extends Application {
         primaryStage.setTitle(" --> Patient Card <-- [ HL7 FHIR ]");
         primaryStage.setScene(new Scene(root, 1000, 650));
         primaryStage.show();
+
+
     }
 
 
 
     public static void main(String[] args) {
+
         launch(args);
 
 

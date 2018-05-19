@@ -6,7 +6,6 @@ import ca.uhn.fhir.model.dstu2.resource.Patient;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class Connection {
 
@@ -29,7 +28,7 @@ public class Connection {
         responseFromServer = client
                 .search()
                 .forResource(Patient.class)
-                .where(Patient.FAMILY.matches().value("Smith"))
+               // .where(Patient.FAMILY.matches().value("Smith"))
                 .returnBundle(Bundle.class)
                 .execute();
     }
@@ -71,8 +70,16 @@ public class Connection {
 //            System.out.println(f.getName());
 //
 //        }
-        patientList.forEach((a)->{   System.out.println("--- PATIENT  ---");
-            System.out.println(a.getName());});
+//        patientList.forEach((myPatient)->{   System.out.println("--- PATIENT  ---");
+//            System.out.println(myPatient.getName());});
 
+
+
+
+    }
+
+
+    public ArrayList<Patient> getPatientList() {
+        return patientList;
     }
 }

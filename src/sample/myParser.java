@@ -20,5 +20,17 @@ public class myParser {
         return name;
     }
 
+    public static myPatient searchMyPatient(Connection myCon, String id){
+        myPatient result=null;
+        for (int x=0 ; x <myCon.getPatientList().size() ; x++ ) {
+            if (myCon.getPatientList().get(x).getId() == id) {
+                result = myCon.getPatientList().get(x);
+                break;
+            }
+        }
+
+        return result;
+    }
+
 
 }

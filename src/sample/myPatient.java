@@ -16,6 +16,51 @@ public class myPatient {
         this.id = i;
     }
 
+
+
+    public String getSex(){
+        try{
+            return patient.getGender();
+        }
+    catch(Exception e){
+            return "none";
+        }
+    }
+
+    public String getBirth(){
+        try{
+            return patient.getBirthDate().toString();
+        }
+        catch(Exception e){
+            return "none";
+        }
+    }
+
+    public String getAddress(){
+        try{
+            return patient.getAddress().toString();
+        }
+        catch(Exception e){
+            return "none";
+        }
+    }
+    public String getEmail(){
+        try{
+            return patient.getTelecom().get(0).toString();
+        }
+        catch(Exception e){
+            return "none";
+        }
+    }
+    public String getTelephone(){
+        try{
+            return patient.getTelecom().get(1).toString();
+        }
+        catch(Exception e){
+            return "none";
+        }
+    }
+
     public Patient getPatient() {
         return patient;
     }

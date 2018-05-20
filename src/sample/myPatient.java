@@ -3,6 +3,8 @@ package sample;
 import ca.uhn.fhir.model.dstu2.resource.Patient;
 import ca.uhn.fhir.model.primitive.IdDt;
 
+import java.text.SimpleDateFormat;
+
 public class myPatient {
 
     private Patient patient;
@@ -20,7 +22,10 @@ public class myPatient {
 
     public String getSex(){
         try{
-            return patient.getGender();
+            if( patient.getGender().length()>1 && patient.getGender()!="[]")
+                return patient.getGender();
+            else
+                return "none";
         }
     catch(Exception e){
             return "none";
@@ -28,8 +33,12 @@ public class myPatient {
     }
 
     public String getBirth(){
+        SimpleDateFormat dt1 = new SimpleDateFormat("yyyy-MM-dd");
         try{
-            return patient.getBirthDate().toString();
+            if( patient.getBirthDate().toString().length()>1 && patient.getBirthDate().toString()!="[]")
+                return dt1.format(patient.getBirthDate());
+            else
+                return "none";
         }
         catch(Exception e){
             return "none";
@@ -38,7 +47,10 @@ public class myPatient {
 
     public String getAddress(){
         try{
-            return patient.getAddress().toString();
+            if (patient.getAddress().get(0).getCountry().length()>2  && patient.getAddress().get(0).getCity().length() >2 )
+                return patient.getAddress().get(0).getCountry() + ", " +patient.getAddress().get(0).getCity() ;
+            else
+                return "none";
         }
         catch(Exception e){
             return "none";
@@ -46,7 +58,10 @@ public class myPatient {
     }
     public String getEmail(){
         try{
-            return patient.getTelecom().get(0).toString();
+            if(patient.getTelecom().get(1).toString().length()>1 && patient.getTelecom().get(1).toString()!="[]")
+                return patient.getTelecom().get(1).getValue();
+            else
+                return "none";
         }
         catch(Exception e){
             return "none";
@@ -54,7 +69,10 @@ public class myPatient {
     }
     public String getTelephone(){
         try{
-            return patient.getTelecom().get(1).toString();
+            if (patient.getTelecom().get(0).toString().length()>1 && patient.getTelecom().get(0).toString()!="[]")
+                return patient.getTelecom().get(0).getValue();
+            else
+                return "none";
         }
         catch(Exception e){
             return "none";

@@ -30,7 +30,7 @@ public class Connection {//implements Runnable {
         responseFromServer = client
                 .search()
                 .forResource(Patient.class)
-                //.where(Patient.NAME.matchesExactly().value("Smith"))
+                //.where(Patient.NAME.matchesExactly().value("Andersson"))
                 .sort().ascending(Patient.FAMILY)
                 .returnBundle(Bundle.class)
                 .execute();

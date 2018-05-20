@@ -30,7 +30,7 @@ public class Connection {//implements Runnable {
         responseFromServer = client
                 .search()
                 .forResource(Patient.class)
-                //.where(Patient.NAME.matchesExactly().value("Andersson"))
+               // .where(Patient.NAME.matches().value("Guti"))
                 .sort().ascending(Patient.FAMILY)
                 .returnBundle(Bundle.class)
                 .execute();
@@ -38,7 +38,6 @@ public class Connection {//implements Runnable {
 
     private static void addInitial(Bundle theBundle, ArrayList<myPatient> thepatientList) {
         for (int i=0 ; i<theBundle.getEntry().size(); i++){
-           // thepatientList.add((Patient) theBundle.getEntry().get(i).getResource());
            Patient thePatient = (Patient) theBundle.getEntry().get(i).getResource();
             String checkName=myParser.myGetName(thePatient);
             if(checkName.length()>1) {
@@ -50,9 +49,6 @@ public class Connection {//implements Runnable {
 
     private static void addAnyResourcesNotAlreadyPresent( Bundle thePartialBundle, ArrayList<myPatient> thepatientList) {
         for (int i=0 ; i<thePartialBundle.getEntry().size(); i++){
-          //  if (!thepatientList.contains((Patient) thePartialBundle.getEntry().get(i).getResource())) {
-            //    thepatientList.add((Patient) thePartialBundle.getEntry().get(i).getResource());
-            //}
             Patient thePatient = (Patient) thePartialBundle.getEntry().get(i).getResource();
             String checkName=myParser.myGetName(thePatient);
             if(checkName.length()>1) {
@@ -69,9 +65,7 @@ public class Connection {//implements Runnable {
 
 
     public void makeResult () {
-
         requestForServer();
-
         addInitial(responseFromServer, patientList);
         Bundle partialBundle = responseFromServer;
         for (; ; ) {
@@ -90,5 +84,9 @@ public class Connection {//implements Runnable {
 
     public ArrayList<myPatient> getPatientList() {
         return patientList;
+    }
+
+    public IGenericClient getClient() {
+        return client;
     }
 }

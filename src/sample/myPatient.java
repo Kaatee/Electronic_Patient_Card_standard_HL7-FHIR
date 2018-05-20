@@ -1,7 +1,6 @@
 package sample;
 
 import ca.uhn.fhir.model.dstu2.resource.Patient;
-import ca.uhn.fhir.model.primitive.IdDt;
 
 import java.text.SimpleDateFormat;
 

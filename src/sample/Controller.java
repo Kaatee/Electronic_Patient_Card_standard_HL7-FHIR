@@ -1,22 +1,17 @@
 package sample;
 
 
-import ca.uhn.fhir.model.dstu2.resource.Patient;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import javafx.util.Callback;
-
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.logging.Logger;
+
 
 
 public class Controller {
@@ -37,26 +32,45 @@ public class Controller {
         System.out.println("patient id " + patientID);
         myPatient searchPat = myParser.searchMyPatient(myConnect,patientID);
 
-
-        //System.out.println("Wybralem element " + selectIdx);
-        //System.out.println("id elementu" + idList.get(selectIdx));
-
-//        Parent root;
-//        try {
-//            root = FXMLLoader.load(getClass().getResource("patientDetails.fxml"));
+        //---OD KASI---------- 430 gutierez
+//        if (searchPat.getPatient().getManagingOrganization() != null) {
 //
-//           // PatientDetailsController pat = new FXMLLoader().getController();
-//            //pat.setTextStart("mama");
-//            Stage stage = new Stage();
-//            stage.setTitle("Patient Details");
-//            stage.setScene(new Scene(root, 1000, 650));
-//            stage.show();
-//            // Hide this current window (if this is what you want)
-//           // ((Node)(event.getSource())).getScene().getWindow().hide();
+//                Bundle observationBundle = myConnect.getClient()
+//                        .search()
+//                        .forResource(Observation.class)
+//                        .where(Observation.PATIENT.hasId(searchPat.getPatient().getId()))
+//                        //.where(Observation.PATIENT.hasId("http://hapi.fhir.org/baseDstu2/Patient/184")).
+//                        //.include(Observation.INCLUDE_PATIENT)
+//                        .returnBundle(Bundle.class)
+//                        .execute();
+//
+//                if(observationBundle.getEntry().size()>=1) {
+//                    Observation obs = (Observation) observationBundle.getEntry().get(0).getResource();
+//                    System.out.println("OBS: " + obs.getCategory());
+//                }
+//
+////            Bundle medicationStatementBundle = myConnect.getClient()
+////                    .search()
+////                    .forResource(MedicationStatement.class)
+////                    //.where(MedicationStatement.PATIENT.hasId("101")
+////                    //.include(MedicationStatement.INCLUDE_PATIENT)
+////                .where(new StringClientParam("patient").matches().value("http://hapi.fhir.org/baseDstu2/Patient/430/_history/1"))
+////                    .returnBundle(Bundle.class)
+////                    .execute();
+//            Bundle medicationStatementBundle = myConnect.getClient()
+//                    .search()
+//                    .forResource(MedicationStatement.class)
+//                    .where(new StringClientParam("patient").matches().value("http://hapi.fhir.org/baseDstu2/Patient/430/_history/1"))
+//                    .execute();
+//
+//                if(medicationStatementBundle.getEntry().size()>=1) {
+//                    System.out.println("Typ ms: " + medicationStatementBundle.getType());
+//                    MedicationStatement ms = (MedicationStatement) medicationStatementBundle.getEntry().get(1).getResource();
+//                    System.out.println("MS: " + ms.getMedication());
+//                }
+//
 //        }
-//        catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        //----------------- ----------------------
 
             FXMLLoader Loader = new FXMLLoader();
             Loader.setLocation(getClass().getResource("PatientDetails.fxml"));

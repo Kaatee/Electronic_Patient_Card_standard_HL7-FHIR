@@ -14,7 +14,7 @@ public class Connection {//implements Runnable {
     private String serverBase;
     private IGenericClient client;
     private FhirContext ctx;
-    private ArrayList<Patient> patientList;
+    private ArrayList<myPatient> patientList;
     private Bundle responseFromServer;
 
     public Connection()
@@ -30,22 +30,40 @@ public class Connection {//implements Runnable {
         responseFromServer = client
                 .search()
                 .forResource(Patient.class)
-               // .where(Patient.FAMILY.matches().value("Smith"))
+                //.where(Patient.NAME.matches().value("S"))
+                .sort().ascending(Patient.FAMILY)
                 .returnBundle(Bundle.class)
                 .execute();
     }
 
-    private static void addInitialUrlsToSet(Bundle theBundle, ArrayList<Patient> thepatientList) {
+    private static void addInitial(Bundle theBundle, ArrayList<myPatient> thepatientList) {
         for (int i=0 ; i<theBundle.getEntry().size(); i++){
-            thepatientList.add((Patient) theBundle.getEntry().get(i).getResource());
+           // thepatientList.add((Patient) theBundle.getEntry().get(i).getResource());
+           Patient thePatient = (Patient) theBundle.getEntry().get(i).getResource();
+            String checkName=myParser.myGetName(thePatient);
+            if(checkName.length()>1) {
+              thepatientList.add(new myPatient(thePatient,checkName,thePatient.getId().toString()));
+            }
+
         }
     }
 
-    private static void addAnyResourcesNotAlreadyPresentToBundle( Bundle thePartialBundle, ArrayList<Patient> thepatientList) {
+    private static void addAnyResourcesNotAlreadyPresent( Bundle thePartialBundle, ArrayList<myPatient> thepatientList) {
         for (int i=0 ; i<thePartialBundle.getEntry().size(); i++){
-            if (!thepatientList.contains((Patient) thePartialBundle.getEntry().get(i).getResource())) {
-                thepatientList.add((Patient) thePartialBundle.getEntry().get(i).getResource());
+          //  if (!thepatientList.contains((Patient) thePartialBundle.getEntry().get(i).getResource())) {
+            //    thepatientList.add((Patient) thePartialBundle.getEntry().get(i).getResource());
+            //}
+            Patient thePatient = (Patient) thePartialBundle.getEntry().get(i).getResource();
+            String checkName=myParser.myGetName(thePatient);
+            if(checkName.length()>1) {
+                //thepatientList.add(new myPatient(thePatient,checkName,thePatient.getId().toString()));
+                myPatient my =new myPatient(thePatient,checkName,thePatient.getId().toString());
+                    if (! thepatientList.contains(my)) {
+                        thepatientList.add(my);
+                    }
+
             }
+
         }
     }
 
@@ -54,12 +72,12 @@ public class Connection {//implements Runnable {
 
         requestForServer();
 
-        addInitialUrlsToSet(responseFromServer, patientList);
+        addInitial(responseFromServer, patientList);
         Bundle partialBundle = responseFromServer;
         for (; ; ) {
             if (partialBundle.getLink(IBaseBundle.LINK_NEXT) != null) {
                 partialBundle = client.loadPage().next(partialBundle).execute();
-                addAnyResourcesNotAlreadyPresentToBundle(partialBundle, patientList);
+                addAnyResourcesNotAlreadyPresent(partialBundle, patientList);
             } else {
                 break;
             }
@@ -68,17 +86,9 @@ public class Connection {//implements Runnable {
         System.out.println("Pacjentow po wyszukiwaniu: " + patientList.size());
 
     }
-//
-//    public void run() {
-//        makeResult();
-//        System.out.println("Thread ended:::"+Thread.currentThread().getName());
-//
-//    }
 
 
-
-
-    public ArrayList<Patient> getPatientList() {
+    public ArrayList<myPatient> getPatientList() {
         return patientList;
     }
 }

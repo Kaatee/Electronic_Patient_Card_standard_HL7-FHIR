@@ -1,6 +1,11 @@
 package sample;
 
 
+import ca.uhn.fhir.model.api.Include;
+import ca.uhn.fhir.model.dstu2.resource.Bundle;
+import ca.uhn.fhir.model.dstu2.resource.MedicationStatement;
+import ca.uhn.fhir.model.dstu2.resource.Observation;
+import ca.uhn.fhir.rest.gclient.StringClientParam;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -33,43 +38,36 @@ public class Controller {
         myPatient searchPat = myParser.searchMyPatient(myConnect,patientID);
 
         //---OD KASI---------- 430 gutierez
-//        if (searchPat.getPatient().getManagingOrganization() != null) {
-//
-//                Bundle observationBundle = myConnect.getClient()
-//                        .search()
-//                        .forResource(Observation.class)
-//                        .where(Observation.PATIENT.hasId(searchPat.getPatient().getId()))
-//                        //.where(Observation.PATIENT.hasId("http://hapi.fhir.org/baseDstu2/Patient/184")).
-//                        //.include(Observation.INCLUDE_PATIENT)
-//                        .returnBundle(Bundle.class)
-//                        .execute();
-//
-//                if(observationBundle.getEntry().size()>=1) {
-//                    Observation obs = (Observation) observationBundle.getEntry().get(0).getResource();
-//                    System.out.println("OBS: " + obs.getCategory());
-//                }
-//
-////            Bundle medicationStatementBundle = myConnect.getClient()
-////                    .search()
-////                    .forResource(MedicationStatement.class)
-////                    //.where(MedicationStatement.PATIENT.hasId("101")
-////                    //.include(MedicationStatement.INCLUDE_PATIENT)
-////                .where(new StringClientParam("patient").matches().value("http://hapi.fhir.org/baseDstu2/Patient/430/_history/1"))
-////                    .returnBundle(Bundle.class)
-////                    .execute();
-//            Bundle medicationStatementBundle = myConnect.getClient()
-//                    .search()
-//                    .forResource(MedicationStatement.class)
-//                    .where(new StringClientParam("patient").matches().value("http://hapi.fhir.org/baseDstu2/Patient/430/_history/1"))
-//                    .execute();
-//
-//                if(medicationStatementBundle.getEntry().size()>=1) {
-//                    System.out.println("Typ ms: " + medicationStatementBundle.getType());
-//                    MedicationStatement ms = (MedicationStatement) medicationStatementBundle.getEntry().get(1).getResource();
-//                    System.out.println("MS: " + ms.getMedication());
-//                }
-//
-//        }
+        if (searchPat.getPatient().getManagingOrganization() != null) {
+
+                Bundle observationBundle = myConnect.getClient()
+                        .search()
+                        .forResource(Observation.class)
+                        .where(Observation.SUBJECT.hasId(searchPat.getIdMed()))
+                        .returnBundle(Bundle.class)
+                        .execute();
+
+                if(observationBundle.getEntry().size()>=1) {
+                    Observation obs = (Observation) observationBundle.getEntry().get(0).getResource();
+                    System.out.println("OBS: " + obs.getCategory());
+                }
+
+
+            Bundle medicationStatementBundle = myConnect.getClient()
+                    .search()
+                    .forResource(MedicationStatement.class)
+                   .where(MedicationStatement.PATIENT.hasId(searchPat.getIdMed()))
+                            .returnBundle(Bundle.class)
+                            .execute();
+
+                if(medicationStatementBundle.getEntry().size()>=1) {
+                    System.out.println("Typ ms: " + medicationStatementBundle.getType());
+                    MedicationStatement ms = (MedicationStatement) medicationStatementBundle.getEntry().get(1).getResource();
+                    System.out.println("MS: " + ms.getMedication());
+                }
+
+
+        }
         //----------------- ----------------------
 
             FXMLLoader Loader = new FXMLLoader();

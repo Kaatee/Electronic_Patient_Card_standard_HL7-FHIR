@@ -78,6 +78,18 @@ public class myPatient {
         }
     }
 
+    public String getIdMed(){
+        String name;
+
+        String [] arr = patient.getId().toString().split("/");
+        name = arr[4] +"/" +arr[5];
+       // System.out.println(name);
+
+        return name;
+
+    }
+
+
     public Patient getPatient() {
         return patient;
     }

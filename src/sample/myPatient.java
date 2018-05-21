@@ -1,6 +1,8 @@
 package sample;
 
-import ca.uhn.fhir.model.dstu2.resource.Patient;
+
+
+import org.hl7.fhir.dstu3.model.Patient;
 
 import java.text.SimpleDateFormat;
 
@@ -15,14 +17,14 @@ public class myPatient {
         this.patient=p;
         this.name = n;
         this.id = i;
+
     }
-
-
 
     public String getSex(){
         try{
-            if( patient.getGender().length()>1 && patient.getGender()!="[]")
-                return patient.getGender();
+
+            if( patient.getGender().toString().length()>1 && patient.getGender().toString()!="[]")
+                return patient.getGender().toString();
             else
                 return "none";
         }
@@ -83,8 +85,6 @@ public class myPatient {
 
         String [] arr = patient.getId().toString().split("/");
         name = arr[4] +"/" +arr[5];
-       // System.out.println(name);
-
         return name;
 
     }

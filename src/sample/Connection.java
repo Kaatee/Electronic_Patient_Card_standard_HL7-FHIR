@@ -1,12 +1,15 @@
 package sample;
 
+
+
+
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.model.dstu2.resource.Bundle;
-import ca.uhn.fhir.model.dstu2.resource.Patient;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import org.hl7.fhir.instance.model.api.IBaseBundle;
+import org.hl7.fhir.dstu3.model.Bundle;
+
+import org.hl7.fhir.dstu3.model.Patient;
+import org.hl7.fhir.r4.model.api.IBaseBundle;
+
 import java.util.ArrayList;
 
 public class Connection {//implements Runnable {
@@ -19,19 +22,20 @@ public class Connection {//implements Runnable {
 
     public Connection()
     {
-        this.ctx = FhirContext.forDstu2();
-        this.serverBase="http://fhirtest.uhn.ca/baseDstu2";
+        this.ctx = FhirContext.forDstu3();
+        this.serverBase="http://fhirtest.uhn.ca/baseDstu3";
         this.client = ctx.newRestfulGenericClient(serverBase);
         this.patientList  = new ArrayList<>();
     }
 
     private void requestForServer (){
         //zapytanie
+
         responseFromServer = client
                 .search()
                 .forResource(Patient.class)
-                //.where(Patient.NAME.matches().value("Guti"))
-                .sort().ascending(Patient.FAMILY)
+                .where(Patient.NAME.matches().value("John"))
+                //.sort().ascending(Patient.FAMILY)
                 .returnBundle(Bundle.class)
                 .execute();
     }

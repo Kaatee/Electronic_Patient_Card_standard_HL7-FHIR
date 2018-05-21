@@ -1,11 +1,7 @@
 package sample;
 
 
-import ca.uhn.fhir.model.api.Include;
-import ca.uhn.fhir.model.dstu2.resource.Bundle;
-import ca.uhn.fhir.model.dstu2.resource.MedicationStatement;
-import ca.uhn.fhir.model.dstu2.resource.Observation;
-import ca.uhn.fhir.rest.gclient.StringClientParam;
+import org.hl7.fhir.dstu3.model.Bundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -14,6 +10,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import org.hl7.fhir.dstu3.model.MedicationStatement;
+import org.hl7.fhir.dstu3.model.Observation;
+
 import java.io.IOException;
 import java.util.ArrayList;
 

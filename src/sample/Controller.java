@@ -107,6 +107,10 @@ public class Controller {
         String searchName = textFieldSearch.getText();
         listViewPatient.getItems().clear();
 
+        myConnect = new Connection();
+        myConnect.makeResult(searchName);
+
+
         ObservableList<String> items =FXCollections.observableArrayList ();
         idList = new ArrayList<>();
 

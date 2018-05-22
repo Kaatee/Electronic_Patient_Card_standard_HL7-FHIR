@@ -18,7 +18,6 @@ public class Connection {//implements Runnable {
     private IGenericClient client;
     private FhirContext ctx;
     private ArrayList<myPatient> patientList;
-    private Bundle responseFromServer;
 
     public Connection()
     {
@@ -28,50 +27,62 @@ public class Connection {//implements Runnable {
         this.patientList  = new ArrayList<>();
     }
 
-    private void requestForServer (){
+    private Bundle requestForServer (){
         //zapytanie
-
+        Bundle responseFromServer = new Bundle();
         responseFromServer = client
                 .search()
                 .forResource(Patient.class)
-                .where(Patient.NAME.matches().value("John"))
-                //.sort().ascending(Patient.FAMILY)
                 .returnBundle(Bundle.class)
                 .execute();
+
+        return responseFromServer;
     }
+
+    private Bundle requestForServerSearch (String param){
+        //zapytanie
+        Bundle responseFromServer = new Bundle();
+        responseFromServer = client
+                .search()
+                .forResource(Patient.class)
+                .where(Patient.NAME.matches().value(param))
+                .returnBundle(Bundle.class)
+                .execute();
+
+        return responseFromServer;
+    }
+
 
     private static void addInitial(Bundle theBundle, ArrayList<myPatient> thepatientList) {
         for (int i=0 ; i<theBundle.getEntry().size(); i++){
-           Patient thePatient = (Patient) theBundle.getEntry().get(i).getResource();
+            Patient thePatient = (Patient) theBundle.getEntry().get(i).getResource();
             String checkName=myParser.myGetName(thePatient);
-            if(checkName.length()>1) {
-              thepatientList.add(new myPatient(thePatient,checkName,thePatient.getId().toString()));
+            if(checkName.length()>2) {
+                thepatientList.add(new myPatient(thePatient,checkName,thePatient.getId().toString()));
             }
-
-        }
+            }
     }
 
     private static void addAnyResourcesNotAlreadyPresent( Bundle thePartialBundle, ArrayList<myPatient> thepatientList) {
         for (int i=0 ; i<thePartialBundle.getEntry().size(); i++){
             Patient thePatient = (Patient) thePartialBundle.getEntry().get(i).getResource();
             String checkName=myParser.myGetName(thePatient);
-            if(checkName.length()>1) {
-                //thepatientList.add(new myPatient(thePatient,checkName,thePatient.getId().toString()));
+            if(checkName.length()>2) {
+
                 myPatient my =new myPatient(thePatient,checkName,thePatient.getId().toString());
-                    if (! thepatientList.contains(my)) {
-                        thepatientList.add(my);
-                    }
-
-            }
-
-        }
+                if (! thepatientList.contains(my)) {
+                    thepatientList.add(my);
+                }
+                }
+                }
     }
 
 
     public void makeResult () {
-        requestForServer();
-        addInitial(responseFromServer, patientList);
-        Bundle partialBundle = responseFromServer;
+
+         Bundle  my=  requestForServer();
+        addInitial(my, patientList);
+        Bundle partialBundle = my;
         for (; ; ) {
             if (partialBundle.getLink(IBaseBundle.LINK_NEXT) != null) {
                 partialBundle = client.loadPage().next(partialBundle).execute();
@@ -80,7 +91,23 @@ public class Connection {//implements Runnable {
                 break;
             }
         }
+        System.out.println("Pacjentow po wyszukiwaniu: " + patientList.size());
+    }
 
+
+    public void makeResult (String param) {
+
+        Bundle my=requestForServerSearch(param);
+        addInitial(my, patientList);
+        Bundle partialBundle = my;
+        for (; ; ) {
+            if (partialBundle.getLink(IBaseBundle.LINK_NEXT) != null) {
+                partialBundle = client.loadPage().next(partialBundle).execute();
+                addAnyResourcesNotAlreadyPresent(partialBundle, patientList);
+            } else {
+                break;
+            }
+        }
         System.out.println("Pacjentow po wyszukiwaniu: " + patientList.size());
 
     }

@@ -20,9 +20,9 @@ public class myMedication {
     }
 
     public String printIt(){
-            String name;
+        String name;
 
-        name = "Observation: Id: " + getId() + " ingredients: " + getIngridients();
+        name = "Observation: \nId: " + getId() + "\ningredients: " + getIngridients();
         return name;
     }
 

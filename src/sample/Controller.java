@@ -33,7 +33,7 @@ public class Controller {
     public void showDetails(ActionEvent event){
         int selectIdx = listViewPatient.getSelectionModel().getSelectedIndex();
         String patientID = idList.get(selectIdx);
-        System.out.println("patient id " + patientID);
+       // System.out.println("patient id " + patientID);
         myPatient searchPat = myParser.searchMyPatient(myConnect,patientID);
 
 //        //---OD KASI---------- 430 gutierez

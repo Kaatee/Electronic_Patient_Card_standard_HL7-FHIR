@@ -28,7 +28,7 @@ public class myPatient {
             else
                 return "none";
         }
-    catch(Exception e){
+        catch(Exception e){
             return "none";
         }
     }
@@ -86,6 +86,15 @@ public class myPatient {
         String [] arr = patient.getId().toString().split("/");
         name = arr[4] +"/" +arr[5];
         return name;
+
+    }
+
+    public String getIdNum(){
+        String num;
+
+        String [] arr = patient.getId().toString().split("/");
+        num = arr[5];
+        return num;
 
     }
 

@@ -22,14 +22,27 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.Region;
+import org.hl7.fhir.dstu3.model.Bundle;
+import org.hl7.fhir.dstu3.model.MedicationStatement;
+import org.hl7.fhir.dstu3.model.Observation;
+import org.hl7.fhir.dstu3.model.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
+import org.hl7.fhir.instance.model.api.IBaseBundle;
+
+import java.io.IOException;
+import java.util.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.net.URISyntaxException;
 import java.util.LinkedList;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.Set;
 
 public class PatientDetailsController {
 
@@ -40,6 +53,7 @@ public class PatientDetailsController {
     public Label textEmail;
     public Label textTelephone;
 
+    private Connection myConnect;
     public LineChart<String ,Number> myLineChart;
     private double circleSize = 100.0;
 
@@ -52,7 +66,103 @@ public class PatientDetailsController {
         this.textTelephone.setText(tel);
     }
 
+    public void createDetailsTimeLine(myPatient searchPat){
+        ////////////////////////////////////////
+        System.out.println("Jestem TU");
+        System.out.println("Id wyswietlanego pacjenta 1: " + searchPat.getIdNum());
+        Connection myConnect = new Connection();
 
+        //// ----------- POBIERANIE WSZYSTKICH PARAMETROW PACIENTA ----------------------
+        Parameters parameters = myConnect.getClient()
+                .operation()
+                .onInstance(new IdType("Patient", searchPat.getIdNum()))
+                .named("$everything")
+                .withNoParameters(Parameters.class)
+                .useHttpGet()
+                .execute();
+
+        List<Bundle.BundleEntryComponent> params = new LinkedList<>();
+        List<Parameters.ParametersParameterComponent> paramList = parameters.getParameter();
+
+        for(int i=0;i<paramList.size(); i++){
+            Bundle bundle = (Bundle) paramList.get(i).getResource();
+            params.addAll(bundle.getEntry());
+            //Bundle partialBundle =  bundle;
+            for(;;){
+                if(bundle.getLink(IBaseBundle.LINK_NEXT) != null) {
+                    bundle = myConnect.getClient().loadPage().next(bundle).execute();
+                    params.addAll(bundle.getEntry());
+                }
+                else break;
+            }
+        }
+        System.out.println("Dlugosc listy parametrów:  " + params.size());
+
+
+        //--------------- POBIERANIE LISTY MEDYKAMENTOW PACJEMTA -------------------------
+        List<myMedication> medList = new LinkedList<>();
+        List<myMedicationStatement> medStatList = new LinkedList<>();
+        List<myObservation> obsList = new LinkedList<>();
+        if(params.size()==0) System.out.println("Trafiłaś na durnia bez parametrów");
+        for(int i=0;i<params.size();i++){
+            if(params.get(i).getResource() instanceof Medication){
+                Medication medTmp = (Medication) params.get(i).getResource();
+
+                List<Medication.MedicationIngredientComponent> ingridientList = medTmp.getIngredient();
+                String ingStr = "";
+
+                for (int j=0;j<ingridientList.size();j++){
+                    ingStr = ingStr + ", " + ingridientList.get(j).toString() +": " +ingridientList.get(j).getAmount().toString();
+                }
+                myMedication med = new myMedication(medTmp.getId(),ingStr);
+                medList.add(med);
+            }
+            else
+            if(params.get(i).getResource() instanceof MedicationStatement){
+                MedicationStatement medStetTmp = (MedicationStatement) params.get(i).getResource();
+
+                List<Dosage> dosage = medStetTmp.getDosage();
+                List<Annotation> note = medStetTmp.getNote();
+
+                String dosageStr = "";
+                String noteStr="";
+
+                for (int j=0;i<dosage.size();i++){
+                    dosageStr = dosageStr + ", " + dosage.get(j).getPatientInstruction();
+                }
+                for (int j=0;i<note.size();i++){
+                    noteStr = noteStr +", " + note.get(j).getText();
+                }
+
+                myMedicationStatement medStet = new myMedicationStatement(medStetTmp.getId(), dosageStr, noteStr);
+                medStatList.add(medStet);
+            }
+            ///////////////////////tomoze trzeba bedzie przelozyc do medication statement zeby sie wspolnie wyswietlaly
+            else
+            if(params.get(i).getResource() instanceof Observation){ //Schiller Fricostam???
+                Observation obsTmp = (Observation) params.get(i).getResource();
+                try {
+                    myObservation obs = new myObservation(obsTmp.getIssued(), obsTmp.getStatus().getDisplay());
+                    obsList.add(obs);
+                } catch(Exception e){
+                    myObservation obs = new myObservation(new Date(), ""); //tu coś ogarnąź z datą w zależności jak Piterowi wygodniej
+                    obsList.add(obs);
+                }
+
+            }
+            else System.out.println("Twój duren jednak ma parametry ale nie te kore chcesz");
+
+
+
+        }
+        System.out.println("Wyswietlam pobrane rzeczy: ");
+        for (int a=0;a<medList.size();a++) medList.get(a).printIt();
+        for (int a=0;a<medStatList.size();a++) medStatList.get(a).printIt();
+        for (int a=0;a<obsList.size();a++) obsList.get(a).printIt();
+
+
+///////////////////////////////////////////////////////
+    }
 
 
     public void initialize(){

@@ -36,38 +36,38 @@ public class Controller {
         System.out.println("patient id " + patientID);
         myPatient searchPat = myParser.searchMyPatient(myConnect,patientID);
 
-        //---OD KASI---------- 430 gutierez
-        if (searchPat.getPatient().getManagingOrganization() != null) {
-
-                Bundle observationBundle = myConnect.getClient()
-                        .search()
-                        .forResource(Observation.class)
-                        .where(Observation.SUBJECT.hasId(searchPat.getIdMed()))
-                        .returnBundle(Bundle.class)
-                        .execute();
-
-                if(observationBundle.getEntry().size()>=1) {
-                    Observation obs = (Observation) observationBundle.getEntry().get(0).getResource();
-                    System.out.println("OBS: " + obs.getCategory());
-                }
-
-
-            Bundle medicationStatementBundle = myConnect.getClient()
-                    .search()
-                    .forResource(MedicationStatement.class)
-                   .where(MedicationStatement.PATIENT.hasId(searchPat.getIdMed()))
-                            .returnBundle(Bundle.class)
-                            .execute();
-
-                if(medicationStatementBundle.getEntry().size()>=1) {
-                    System.out.println("Typ ms: " + medicationStatementBundle.getType());
-                    MedicationStatement ms = (MedicationStatement) medicationStatementBundle.getEntry().get(1).getResource();
-                    System.out.println("MS: " + ms.getMedication());
-                }
-
-
-        }
-        //----------------- ----------------------
+//        //---OD KASI---------- 430 gutierez
+//        if (searchPat.getPatient().getManagingOrganization() != null) {
+//
+//                Bundle observationBundle = myConnect.getClient()
+//                        .search()
+//                        .forResource(Observation.class)
+//                        .where(Observation.SUBJECT.hasId(searchPat.getIdMed()))
+//                        .returnBundle(Bundle.class)
+//                        .execute();
+//
+//                if(observationBundle.getEntry().size()>=1) {
+//                    Observation obs = (Observation) observationBundle.getEntry().get(0).getResource();
+//                    System.out.println("OBS: " + obs.getCategory());
+//                }
+//
+//
+//            Bundle medicationStatementBundle = myConnect.getClient()
+//                    .search()
+//                    .forResource(MedicationStatement.class)
+//                   .where(MedicationStatement.PATIENT.hasId(searchPat.getIdMed()))
+//                            .returnBundle(Bundle.class)
+//                            .execute();
+//
+//                if(medicationStatementBundle.getEntry().size()>=1) {
+//                    System.out.println("Typ ms: " + medicationStatementBundle.getType());
+//                    MedicationStatement ms = (MedicationStatement) medicationStatementBundle.getEntry().get(1).getResource();
+//                    System.out.println("MS: " + ms.getMedication());
+//                }
+//
+//
+//        }
+//        //----------------- ----------------------
 
             FXMLLoader Loader = new FXMLLoader();
             Loader.setLocation(getClass().getResource("PatientDetails.fxml"));
@@ -80,6 +80,7 @@ public class Controller {
 
             PatientDetailsController pat = Loader.getController();
             pat.setTextStart(searchPat.getName(), searchPat.getSex(), searchPat.getBirth(), searchPat.getAddress(), searchPat.getEmail(), searchPat.getTelephone());
+            pat.createDetailsTimeLine(searchPat);
             Parent root = Loader.getRoot();
             Stage stage = new Stage();
             stage.setTitle("Patient Details");

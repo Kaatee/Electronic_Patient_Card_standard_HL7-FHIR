@@ -19,7 +19,11 @@ public class myObservation {
         return status;
     }
 
-    public void printIt(){
-        System.out.println("Observation: Data: " + getDate().toString() + " status: " + getStatus());
+    public String printIt(){
+   //     System.out.println("Observation: Data: " + getDate().toString() + " status: " + getStatus());
+        String name;
+
+        name ="Observation: Data: " + getDate().toString() + " status: " + getStatus();
+        return name;
     }
 }

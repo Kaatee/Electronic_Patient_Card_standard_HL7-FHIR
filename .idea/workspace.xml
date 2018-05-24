@@ -2,15 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Patient Card/sample/Connection.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Patient Card/sample/Connection.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Patient Card/sample/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Patient Card/sample/Main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Patient Card/sample/PatientDetailsController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Patient Card/sample/PatientDetailsController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Patient Card/sample/patientDetails.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Patient Card/sample/patientDetails.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Patient Card/sample/sample.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Patient Card/sample/sample.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/sample/Connection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/Connection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/Controller.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/sample/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/sample/PatientDetailsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/PatientDetailsController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/myMedication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/myMedication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/myMedicationStatement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/myMedicationStatement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/myObservation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/myObservation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/myParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/myParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/myPatient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/myPatient.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/sample/patientDetails.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/patientDetails.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/sample/sample.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/sample.fxml" afterDir="false" />
     </list>
@@ -73,7 +73,7 @@
       <file leaf-file-name="Connection.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/sample/Connection.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
+            <state relative-caret-position="221">
               <caret line="18" column="42" selection-start-line="18" selection-start-column="42" selection-end-line="18" selection-end-column="42" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -94,7 +94,7 @@
       <file leaf-file-name="Controller.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/sample/Controller.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-289">
+            <state relative-caret-position="1037">
               <caret line="74" selection-start-line="74" selection-end-line="74" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -118,7 +118,7 @@
       <file leaf-file-name="myParser.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/sample/myParser.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="177">
+            <state relative-caret-position="340">
               <caret line="20" column="20" selection-start-line="20" selection-start-column="20" selection-end-line="20" selection-end-column="20" />
             </state>
           </provider>
@@ -127,8 +127,8 @@
       <file leaf-file-name="myPatient.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/sample/myPatient.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="442">
-              <caret line="85" column="15" lean-forward="true" selection-start-line="85" selection-start-column="15" selection-end-line="85" selection-end-column="15" />
+            <state relative-caret-position="1411">
+              <caret line="85" column="15" selection-start-line="85" selection-start-column="15" selection-end-line="85" selection-end-column="15" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -202,8 +202,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="AndroidView" />
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -226,6 +224,8 @@
           <select />
         </subPane>
       </pane>
+      <pane id="AndroidView" />
+      <pane id="PackagesPane" />
       <pane id="Scope" />
     </panes>
   </component>
@@ -381,15 +381,15 @@
       <workItem from="1527148324852" duration="158000" />
       <workItem from="1527157684377" duration="8670000" />
       <workItem from="1527174694569" duration="1021000" />
+      <workItem from="1527189772724" duration="45000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="108255000" />
+    <option name="totallyTimeSpent" value="108300000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -401,12 +401,12 @@
       <window_info anchor="right" id="Maven Projects" order="4" />
       <window_info anchor="bottom" id="Database Changes" order="13" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="12" weight="0.32897604" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.9265625" visible="true" weight="0.32897604" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.9265625" weight="0.32897604" />
       <window_info anchor="bottom" id="Spring" order="15" />
       <window_info anchor="bottom" id="Terminal" order="14" weight="0.32897604" />
       <window_info id="Capture Tool" order="5" />
       <window_info id="Designer" order="2" />
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.6703755" visible="true" weight="0.1359275" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.6703755" visible="true" weight="0.1369936" />
       <window_info anchor="right" id="Bean Validation" order="9" />
       <window_info anchor="right" id="Database" order="5" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -826,8 +826,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/myPatient.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="85" column="15" lean-forward="true" selection-start-line="85" selection-start-column="15" selection-end-line="85" selection-end-column="15" />
+        <state relative-caret-position="1411">
+          <caret line="85" column="15" selection-start-line="85" selection-start-column="15" selection-end-line="85" selection-end-column="15" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -836,14 +836,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/myParser.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="177">
+        <state relative-caret-position="340">
           <caret line="20" column="20" selection-start-line="20" selection-start-column="20" selection-end-line="20" selection-end-column="20" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/Connection.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
+        <state relative-caret-position="221">
           <caret line="18" column="42" selection-start-line="18" selection-start-column="42" selection-end-line="18" selection-end-column="42" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -860,7 +860,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/Controller.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-289">
+        <state relative-caret-position="1037">
           <caret line="74" selection-start-line="74" selection-end-line="74" />
           <folding>
             <element signature="imports" expanded="true" />

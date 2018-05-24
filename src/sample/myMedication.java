@@ -19,8 +19,11 @@ public class myMedication {
         return ingridients;
     }
 
-    public void printIt(){
-        System.out.println("Observation: Id: " + getId() + " ingredients: " + getIngridients());
+    public String printIt(){
+            String name;
+
+        name = "Observation: Id: " + getId() + " ingredients: " + getIngridients();
+        return name;
     }
 
 }

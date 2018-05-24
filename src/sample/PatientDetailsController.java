@@ -44,7 +44,7 @@ import java.io.FileNotFoundException;
 import java.net.URISyntaxException;
 import java.util.LinkedList;
 
-public class PatientDetailsController {
+public class PatientDetailsController  {
 
     public Label textName;
     public Label textSex;
@@ -56,6 +56,7 @@ public class PatientDetailsController {
     private Connection myConnect;
     public LineChart<String ,Number> myLineChart;
     private double circleSize = 100.0;
+    private ArrayList sortedList;
 
     public void setTextStart( String name, String s,String b, String add, String em , String tel){
         this.textName.setText(name);
@@ -70,7 +71,7 @@ public class PatientDetailsController {
         ////////////////////////////////////////
         System.out.println("Jestem TU");
         System.out.println("Id wyswietlanego pacjenta 1: " + searchPat.getIdNum());
-        Connection myConnect = new Connection();
+        myConnect = new Connection();
 
         //// ----------- POBIERANIE WSZYSTKICH PARAMETROW PACIENTA ----------------------
         Parameters parameters = myConnect.getClient()
@@ -103,6 +104,8 @@ public class PatientDetailsController {
         List<myMedication> medList = new LinkedList<>();
         List<myMedicationStatement> medStatList = new LinkedList<>();
         List<myObservation> obsList = new LinkedList<>();
+        ArrayList obsAndMedStat = new ArrayList();
+
         if(params.size()==0) System.out.println("Trafiłaś na durnia bez parametrów");
         for(int i=0;i<params.size();i++){
             if(params.get(i).getResource() instanceof Medication){
@@ -134,8 +137,9 @@ public class PatientDetailsController {
                     noteStr = noteStr +", " + note.get(j).getText();
                 }
 
-                myMedicationStatement medStet = new myMedicationStatement(medStetTmp.getId(), dosageStr, noteStr);
+                myMedicationStatement medStet = new myMedicationStatement(medStetTmp.getId(), dosageStr, noteStr, medStetTmp.getDateAsserted());
                 medStatList.add(medStet);
+                obsAndMedStat.add(medStet);
             }
             ///////////////////////tomoze trzeba bedzie przelozyc do medication statement zeby sie wspolnie wyswietlaly
             else
@@ -144,9 +148,11 @@ public class PatientDetailsController {
                 try {
                     myObservation obs = new myObservation(obsTmp.getIssued(), obsTmp.getStatus().getDisplay());
                     obsList.add(obs);
+                    obsAndMedStat.add(obs);
                 } catch(Exception e){
                     myObservation obs = new myObservation(new Date(), ""); //tu coś ogarnąź z datą w zależności jak Piterowi wygodniej
                     obsList.add(obs);
+                    obsAndMedStat.add(obs);
                 }
 
             }
@@ -156,16 +162,133 @@ public class PatientDetailsController {
 
         }
         System.out.println("Wyswietlam pobrane rzeczy: ");
-        for (int a=0;a<medList.size();a++) medList.get(a).printIt();
-        for (int a=0;a<medStatList.size();a++) medStatList.get(a).printIt();
-        for (int a=0;a<obsList.size();a++) obsList.get(a).printIt();
+        //for (int a=0;a<medList.size();a++) medList.get(a).printIt();
+       // for (int a=0;a<medStatList.size();a++) medStatList.get(a).printIt();
+     //   for (int a=0;a<obsList.size();a++) obsList.get(a).printIt();
 
 
-///////////////////////////////////////////////////////
+//        System.out.println("------ WYSWIETLAM  N   I   E  POSORROWANA LISTE --------------");
+//        for(int z=0; z<obsAndMedStat.size();z++){
+//            if(obsAndMedStat.get(z) instanceof myMedicationStatement){
+//                myMedicationStatement mm = (myMedicationStatement) obsAndMedStat.get(z);
+//                mm.printIt();
+//            }
+//            else{
+//                myObservation mo = (myObservation) obsAndMedStat.get(z);
+//                mo.printIt();
+//            }
+//        }
+
+
+
+         sortedList = sortList(obsAndMedStat);
+        initialized();
+//       System.out.println("------ WYSWIETLAM POSORROWANA LISTE --------------");
+//        for(int z=0; z<sortedList.size();z++){
+//            if(sortedList.get(z) instanceof myMedicationStatement){
+//                myMedicationStatement mm = (myMedicationStatement) sortedList.get(z);
+//                mm.printIt();
+//            }
+//            else{
+//                myObservation mo = (myObservation) sortedList.get(z);
+//                mo.printIt();
+//            }
+//        }
+
+
     }
 
+    public ArrayList swap(ArrayList array, int idx1, int idx2){
+        ArrayList sortedArray = array;
 
-    public void initialize(){
+        Object tmpIdx1;
+        Object tmpIdx2;
+        tmpIdx1 = sortedArray.get(idx1);
+        tmpIdx2 = sortedArray.get(idx2);
+        sortedArray.remove(idx1);
+        sortedArray.add(idx1, tmpIdx2);
+        sortedArray.remove(idx2);
+        sortedArray.add(idx2, tmpIdx1);
+
+        return sortedArray;
+    }
+
+    public ArrayList sortList(ArrayList array){
+        myMedicationStatement medS =null;
+        myMedicationStatement medS1= null;
+        myObservation obs = null;
+        myObservation obs1 = null;
+
+
+        int numberOfEl = array.size();
+        do {
+            for ( int x =0 ; x< numberOfEl-1 ; x++){
+                if(array.get(x) instanceof myMedicationStatement) {
+                    medS = (myMedicationStatement) array.get(x);
+
+                }
+                else {
+                    obs  =(myObservation) array.get(x);
+                }
+
+                if(array.get(x+1) instanceof myMedicationStatement) {
+                    medS1 = (myMedicationStatement) array.get(x+1);
+
+                }
+                else {
+                    obs1  =(myObservation) array.get(x+1);
+                }
+
+
+                if (medS != null && medS1 != null){
+
+                    if(medS.getDate().after(medS1.getDate())){
+                        array = swap(array, x, x+1);
+                    }
+                    medS=null;
+                    medS1=null;
+
+                }
+                else if ( medS!= null && obs1 != null ){
+
+                    if(medS.getDate().after(obs1.getDate())){
+                        array = swap(array, x, x+1);
+                    }
+                    medS=null;
+                    obs1=null;
+
+                } else if (obs != null && medS1 != null){
+                    if(obs.getDate().after(medS1.getDate())){
+                        array = swap(array, x, x+1);
+                    }
+                    obs=null;
+                    medS1=null;
+                } else if (obs !=null && obs1 != null ){
+                    if(obs.getDate().after(obs1.getDate())){
+                        array = swap(array, x, x+1);
+                    }
+                    obs=null;
+                    obs1=null;
+                }
+
+
+            }
+
+            numberOfEl-=1;
+
+
+        } while (numberOfEl>1);
+
+
+
+
+        return array;
+
+    }
+
+    public void initialized(){
+
+        //createDetailsTimeLine(searchPat);
 
         XYChart.Series series = new XYChart.Series();
 
@@ -184,12 +307,25 @@ public class PatientDetailsController {
         rangeAxis.setLowerBound(0.0);
         rangeAxis.setAutoRanging(false);
 
+        myMedicationStatement medS= null;
+        myObservation obs = null;
 
         ObservableList<XYChart.Data<String, Number>> dataObservableList = FXCollections.observableArrayList();
+        System.out.println(sortedList.size());
+        for (int i = 0; i < sortedList.size(); i++) {
+            XYChart.Data<String, Number> data ;
+            if(sortedList.get(i) instanceof myMedicationStatement) {
+                medS= (myMedicationStatement) sortedList.get(i);
+            data = new XYChart.Data<>(medS.getDate().toString(), 1);
+            }
+            else {
+                obs = (myObservation )sortedList.get(i);
+                data = new XYChart.Data<>(obs.getDate().toString() , 1);
+            }
 
-        for (int i = 1; i < 10; i++) {
            // series.getData().add(new XYChart.Data<String , Number>( "Date "+i+"", 1.0));
-            XYChart.Data<String, Number> data = new XYChart.Data<>("Date"+i, 1);
+           //XYChart.Data<String, Number> data = new XYChart.Data<>(medS.getDate().toString(), 1);
+
             Region region = new Region();
             region.setShape(new Circle(circleSize));
             region.setPrefHeight(circleSize);
@@ -211,18 +347,37 @@ public class PatientDetailsController {
 
 
 
-        myLineChart.setPrefWidth(150*10);
+        myLineChart.setPrefWidth(200*sortedList.size());
 
 
         Set<Node> nodes = myLineChart.lookupAll(".default-color0.chart-line-symbol.series0.");
         nodes.forEach((element) -> element.setOnMouseEntered((MouseEvent event) -> {
-            for (int i = 0; i< dataObservableList.size(); i++){
 
-                if (event.getSource().toString().contains("data"+i)){
-                    Tooltip tooltip = new Tooltip("Myyysasaysyasa" + i);
+            for (int i = 0; i< dataObservableList.size(); i++){
+                myMedicationStatement medS1=null;
+                myObservation obs1=null;
+                if(sortedList.get(i) instanceof myMedicationStatement) {
+                    medS1= (myMedicationStatement) sortedList.get(i);
+                    //  data = new XYChart.Data<>(medS.getDate().toString(), 1);
+                }
+                else {
+                    obs1 = (myObservation )sortedList.get(i);
+                    //data = new XYChart.Data<>(obs.getDate().toString(), 1);
+                }
+
+                if (event.getSource().toString().contains("data"+i) && obs1!=null){
+                    Tooltip tooltip = new Tooltip(obs1.printIt());
                     Tooltip.install(element, tooltip);
                 }
+                else if (event.getSource().toString().contains("data"+i) && medS1!=null){
+                    Tooltip tooltip = new Tooltip(medS1.printIt());
+                    Tooltip.install(element, tooltip);
+                }
+
+//                medS1=null;
+//                obs1=null;
             }
+
         }));
 
 

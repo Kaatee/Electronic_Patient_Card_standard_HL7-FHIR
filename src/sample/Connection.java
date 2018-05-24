@@ -1,15 +1,10 @@
 package sample;
 
-
-
-
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import org.hl7.fhir.dstu3.model.Bundle;
-
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.r4.model.api.IBaseBundle;
-
 import java.util.ArrayList;
 
 public class Connection {//implements Runnable {
@@ -111,7 +106,6 @@ public class Connection {//implements Runnable {
         System.out.println("Pacjentow po wyszukiwaniu: " + patientList.size());
 
     }
-
 
     public ArrayList<myPatient> getPatientList() {
         return patientList;

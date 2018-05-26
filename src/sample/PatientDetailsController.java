@@ -104,6 +104,9 @@ public class PatientDetailsController  {
             }
         }
 
+
+
+
         sortedList = sortList(makeLists());
         addToLineChart();
 
@@ -201,65 +204,63 @@ public class PatientDetailsController  {
         //tu sie wyjebuje dla Smith Evelyn jbc !
 
         int numberOfEl = array.size();
-        do {
-            for ( int x =0 ; x< numberOfEl-1 ; x++){
-                if(array.get(x) instanceof myMedicationStatement) {
-                    medS = (myMedicationStatement) array.get(x);
+        if ( array.size()>1) {
+            do {
+                for (int x = 0; x < numberOfEl - 1; x++) {
+                    if (array.get(x) instanceof myMedicationStatement) {
+                        medS = (myMedicationStatement) array.get(x);
 
-                }
-                else {
-                    obs  =(myObservation) array.get(x);
-                }
-
-                if(array.get(x+1) instanceof myMedicationStatement) {
-                    medS1 = (myMedicationStatement) array.get(x+1);
-
-                }
-                else {
-                    obs1  =(myObservation) array.get(x+1);
-                }
-
-
-                if (medS != null && medS1 != null){
-
-                    if(medS.getDate().after(medS1.getDate())){
-                        array = swap(array, x, x+1);
+                    } else {
+                        obs = (myObservation) array.get(x);
                     }
-                    medS=null;
-                    medS1=null;
+
+                    if (array.get(x + 1) instanceof myMedicationStatement) {
+                        medS1 = (myMedicationStatement) array.get(x + 1);
+
+                    } else {
+                        obs1 = (myObservation) array.get(x + 1);
+                    }
+
+
+                    if (medS != null && medS1 != null) {
+
+                        if (medS.getDate().after(medS1.getDate())) {
+                            array = swap(array, x, x + 1);
+                        }
+                        medS = null;
+                        medS1 = null;
+
+                    } else if (medS != null && obs1 != null) {
+
+                        if (medS.getDate().after(obs1.getDate())) {
+                            array = swap(array, x, x + 1);
+                        }
+                        medS = null;
+                        obs1 = null;
+
+                    } else if (obs != null && medS1 != null) {
+                        if (obs.getDate().after(medS1.getDate())) {
+                            array = swap(array, x, x + 1);
+                        }
+                        obs = null;
+                        medS1 = null;
+                    } else if (obs != null && obs1 != null) {
+                        if (obs.getDate().after(obs1.getDate())) {
+                            array = swap(array, x, x + 1);
+                        }
+                        obs = null;
+                        obs1 = null;
+                    }
+
 
                 }
-                else if ( medS!= null && obs1 != null ){
 
-                    if(medS.getDate().after(obs1.getDate())){
-                        array = swap(array, x, x+1);
-                    }
-                    medS=null;
-                    obs1=null;
-
-                } else if (obs != null && medS1 != null){
-                    if(obs.getDate().after(medS1.getDate())){
-                        array = swap(array, x, x+1);
-                    }
-                    obs=null;
-                    medS1=null;
-                } else if (obs !=null && obs1 != null ){
-                    if(obs.getDate().after(obs1.getDate())){
-                        array = swap(array, x, x+1);
-                    }
-                    obs=null;
-                    obs1=null;
-                }
+                numberOfEl -= 1;
 
 
-            }
+            } while (numberOfEl > 1);
 
-            numberOfEl-=1;
-
-
-        } while (numberOfEl>1);
-
-
+        }
 
 
         return array;

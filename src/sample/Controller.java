@@ -14,8 +14,12 @@ import org.hl7.fhir.dstu3.model.MedicationStatement;
 import org.hl7.fhir.dstu3.model.Observation;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
-
+import java.util.Date;
 
 
 public class Controller {
@@ -26,6 +30,8 @@ public class Controller {
     public Button buttonSearch;
     public TextField textFieldSearch;
     public ListView listViewPatient;
+    public DatePicker datePickerFrom;
+    public DatePicker datePickerTo;
 
     private Connection myConnect;
     private ArrayList<String> idList;
@@ -33,41 +39,22 @@ public class Controller {
     public void showDetails(ActionEvent event){
         int selectIdx = listViewPatient.getSelectionModel().getSelectedIndex();
         String patientID = idList.get(selectIdx);
-       // System.out.println("patient id " + patientID);
         myPatient searchPat = myParser.searchMyPatient(myConnect,patientID);
+        Date to,from;
 
-//        //---OD KASI---------- 430 gutierez
-//        if (searchPat.getPatient().getManagingOrganization() != null) {
-//
-//                Bundle observationBundle = myConnect.getClient()
-//                        .search()
-//                        .forResource(Observation.class)
-//                        .where(Observation.SUBJECT.hasId(searchPat.getIdMed()))
-//                        .returnBundle(Bundle.class)
-//                        .execute();
-//
-//                if(observationBundle.getEntry().size()>=1) {
-//                    Observation obs = (Observation) observationBundle.getEntry().get(0).getResource();
-//                    System.out.println("OBS: " + obs.getCategory());
-//                }
-//
-//
-//            Bundle medicationStatementBundle = myConnect.getClient()
-//                    .search()
-//                    .forResource(MedicationStatement.class)
-//                   .where(MedicationStatement.PATIENT.hasId(searchPat.getIdMed()))
-//                            .returnBundle(Bundle.class)
-//                            .execute();
-//
-//                if(medicationStatementBundle.getEntry().size()>=1) {
-//                    System.out.println("Typ ms: " + medicationStatementBundle.getType());
-//                    MedicationStatement ms = (MedicationStatement) medicationStatementBundle.getEntry().get(1).getResource();
-//                    System.out.println("MS: " + ms.getMedication());
-//                }
-//
-//
-//        }
-//        //----------------- ----------------------
+        try{
+            LocalDate localDate = datePickerFrom.getValue();
+            Instant instant = Instant.from(localDate.atStartOfDay(ZoneId.systemDefault()));
+            from= Date.from(instant);
+            LocalDate localDate1 = datePickerTo.getValue();
+            Instant instant1 = Instant.from(localDate1.atStartOfDay(ZoneId.systemDefault()));
+            to = Date.from(instant1);
+
+        }
+        catch (NullPointerException e) {
+            from = null;
+            to = null;
+        }
 
             FXMLLoader Loader = new FXMLLoader();
             Loader.setLocation(getClass().getResource("PatientDetails.fxml"));
@@ -80,7 +67,10 @@ public class Controller {
 
             PatientDetailsController pat = Loader.getController();
             pat.setTextStart(searchPat.getName(), searchPat.getSex(), searchPat.getBirth(), searchPat.getAddress(), searchPat.getEmail(), searchPat.getTelephone());
-            pat.createDetailsTimeLine(searchPat);
+
+
+        pat.createDetailsTimeLine(searchPat,from,to);
+
             Parent root = Loader.getRoot();
             Stage stage = new Stage();
             stage.setTitle("Patient Details");

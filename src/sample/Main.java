@@ -18,7 +18,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         primaryStage.setTitle("Patient  Card [HL7 FHIR]");
-        primaryStage.setScene(new Scene(root, 700, 650));
+        primaryStage.setScene(new Scene(root, 700, 500));
         primaryStage.show();
     }
 

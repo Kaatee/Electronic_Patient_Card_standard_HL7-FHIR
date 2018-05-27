@@ -8,8 +8,13 @@ public class myObservation {
     private String name;
 
 
-    public myObservation(Date date, String status, String name){
-        this.date=date;
+    public myObservation(Date date, String status, String name, int i){
+        if(date==null){
+        this.date=new Date(System.currentTimeMillis() + i*1000L);
+        }
+        else
+            this.date=date;
+        System.out.println("Ustawilem date na " + this.date);
         this.status = status;
         this.name=name;
     }

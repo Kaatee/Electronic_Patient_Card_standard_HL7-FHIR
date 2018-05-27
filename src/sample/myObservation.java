@@ -6,17 +6,18 @@ public class myObservation {
     private Date date;
     private String status;
     private String name;
+    private String result;
 
 
-    public myObservation(Date date, String status, String name, int i){
+    public myObservation(Date date, String status, String name, int i, String result){
         if(date==null){
-        this.date=new Date(System.currentTimeMillis() + i*1000L);
+            this.date=new Date(System.currentTimeMillis() + i*1000L);
         }
         else
             this.date=date;
-        System.out.println("Ustawilem date na " + this.date);
         this.status = status;
         this.name=name;
+        this.result=result;
     }
 
     public Date getDate() {
@@ -30,11 +31,15 @@ public class myObservation {
         return name;
     }
 
+    public String getResult() {
+        return result;
+    }
+
     public String printIt(){
         //     System.out.println("Observation: Data: " + getDate().toString() + " status: " + getStatus());
         String name;
 
-        name ="Observation:\nData: " + getDate().toString() +"\nnazwa: "+getName()  + "\nstatus: " + getStatus() ;
+        name ="Observation:\nDate: " + getDate().toString() +"\nName: "+getName()  + "\nResult: "+getResult() + "\nStatus: " + getStatus()  ;
         return name;
     }
 }

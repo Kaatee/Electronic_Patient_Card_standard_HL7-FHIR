@@ -1,28 +1,28 @@
 package sample;
 
 public class myMedication {
-    private String id;
-    private String ingridients;
+    private String name;
+    private String dosage;
 
 
-    public myMedication(String id, String ingridients){
-        this.id=id;
-        this.ingridients=ingridients;
-    }
-
-    public String getId() {
-        return id;
+    public myMedication( String name,String dosage){
+        this.name=name;
+        this.dosage=dosage;
     }
 
 
-    public String getIngridients() {
-        return ingridients;
+    public String getName() {
+        return name;
+    }
+
+    public String getDosage() {
+        return dosage;
     }
 
     public String printIt(){
         String name;
 
-        name = "Observation: \nId: " + getId() + "\ningredients: " + getIngridients();
+        name = "Medication: \nName: "+ getName() +"\nDosage: "+ getDosage();
         return name;
     }
 

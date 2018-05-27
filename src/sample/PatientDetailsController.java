@@ -121,84 +121,104 @@ public class PatientDetailsController  {
         obsAndMedStat = new ArrayList();
 
         for(int i=0;i<params.size();i++){
+            //// -----  M E D I C A T I O N  ------
             if(params.get(i).getResource() instanceof Medication){
                 Medication medTmp = (Medication) params.get(i).getResource();
 
-                List<Medication.MedicationIngredientComponent> ingridientList = medTmp.getIngredient();
+//                List<Medication.MedicationIngredientComponent> ingridientList = medTmp.getIngredient();
                 String ingStr = "";
+                String name="";
+                String dosage = "";
 
-                for (int j=0;j<ingridientList.size();j++){
-                    ingStr = ingStr + ", " + ingridientList.get(j).toString() +": " +ingridientList.get(j).getAmount().toString();
-                }
-                myMedication med = new myMedication(medTmp.getId(),ingStr);
+//                for (int j=0;j<ingridientList.size();j++){
+//                    ingStr = ingStr + ", " + ingridientList.get(j).toString() +": " +ingridientList.get(j).getAmount().toString();
+//                }
+
+                try{
+                    name=medTmp.getCode().getText();
+                }catch(Exception e){}
+
+//                if(ingStr.length()==0)ingStr="none";
+                if(name.length()==0) name="none";
+                myMedication med = new myMedication(name,"none");
                 medList.add(med);
             }
             else
-            if(params.get(i).getResource() instanceof MedicationStatement){
-                MedicationStatement medStetTmp = (MedicationStatement) params.get(i).getResource();
+                //// -----  M E D I C A T I O N      S T A T E M E N T ------
+                if(params.get(i).getResource() instanceof MedicationStatement){
+                    MedicationStatement medStetTmp = (MedicationStatement) params.get(i).getResource();
+                    List<Dosage> dosage = medStetTmp.getDosage();
+                    List<Annotation> note = medStetTmp.getNote();
 
-                List<Dosage> dosage = medStetTmp.getDosage();
-                List<Annotation> note = medStetTmp.getNote();
+                    String dosageStr = "";
+                    String noteStr="";
 
-                String dosageStr = "";
-                String noteStr="";
+                    for (int j=0;i<note.size();i++){
+                        noteStr = noteStr +", " + note.get(j).getText();
+                    }
+                    if(noteStr.length()==0) noteStr="none";
 
-                for (int j=0;i<dosage.size();i++){
-                    dosageStr = dosageStr + ", " + dosage.get(j).getPatientInstruction();
-                }
-                for (int j=0;i<note.size();i++){
-                    noteStr = noteStr +", " + note.get(j).getText();
-                }
-                String measure ="none";
-                String measureName="none";
-                try {
-                    measure = medStetTmp.getDosageFirstRep().getDoseSimpleQuantity().getValue().toString() + medStetTmp.getDosageFirstRep().getDoseSimpleQuantity().getUnit();
-                    measureName=medStetTmp.getMedicationCodeableConcept().getCodingFirstRep().getDisplay();
-                }catch(Exception e){ }
+                    String measure ="none";
+                    String measureName="none";
+                    try {
+                        measure = medStetTmp.getDosageFirstRep().getDoseSimpleQuantity().getValue().toString() + medStetTmp.getDosageFirstRep().getDoseSimpleQuantity().getUnit();
+                        measureName=medStetTmp.getMedicationCodeableConcept().getCodingFirstRep().getDisplay();
+                        medList.add(new myMedication( measureName,measure));
+                    }catch(Exception e){ }
 
 
-                myMedicationStatement medStet = new myMedicationStatement(medStetTmp.getId(), dosageStr, noteStr, medStetTmp.getDateAsserted(),measure, measureName,i);
+                    myMedicationStatement medStet = new myMedicationStatement(medStetTmp.getId().split("/")[5],  noteStr, medStetTmp.getDateAsserted(),measure, measureName,i);
 
-                if (from!= null && to !=null) {
-                    if (from.before(medStet.getDate()) && to.after(medStet.getDate())) {
+                    if (from!= null && to !=null) {
+                        if (from.before(medStet.getDate()) && to.after(medStet.getDate())) {
 
+                            medStatList.add(medStet);
+                            obsAndMedStat.add(medStet);
+
+                        }
+                    }
+                    else {
                         medStatList.add(medStet);
                         obsAndMedStat.add(medStet);
-
                     }
                 }
-                else {
-                    medStatList.add(medStet);
-                    obsAndMedStat.add(medStet);
-                }
-            }
-            else
-            if(params.get(i).getResource() instanceof Observation){ //Schiller Fricostam???
-                Observation obsTmp = (Observation) params.get(i).getResource();
-               myObservation obs;
-               try {
-                     obs = new myObservation(obsTmp.getIssued(), obsTmp.getStatus().getDisplay(), obsTmp.getCode().getText(),i);
+                else
+                    //// -----  O B S E R W A T I O N  ------
+                    if(params.get(i).getResource() instanceof Observation){ //Schiller Fricostam???
+                        Observation obsTmp = (Observation) params.get(i).getResource();
+                        myObservation obs;
+                        String result ="none";
+                        try {
+                            if(obsTmp.hasValueQuantity())
+                                result = obsTmp.getValueQuantity().getValue().toString() + obsTmp.getValueQuantity().getUnit();
+                            else if(obsTmp.hasComponent()){
+                                result = obsTmp.getComponent().get(0).getCode().getText() + " " + obsTmp.getComponent().get(0).getValueQuantity().getValue().toString()
+                                        + obsTmp.getComponent().get(0).getValueQuantity().getUnit()+
+                                        "/" + obsTmp.getComponent().get(1).getValueQuantity().getValue().toString()
+                                        + obsTmp.getComponent().get(1).getValueQuantity().getUnit();
+                            }
+                            obs = new myObservation(obsTmp.getIssued(), obsTmp.getStatus().getDisplay(), obsTmp.getCode().getText(),i, result);
 
-                } catch(Exception e){
-                  obs = new myObservation(new Date(), "",obsTmp.getCode().getText() ,i);
+                        } catch(Exception e){
+                            obs = new myObservation(new Date(), "",obsTmp.getCode().getText() ,i,result);
 
-                }
+                        }
 
-                if (from != null && to !=null) {
-                    if (from.before(obs.getDate()) && to.after(obs.getDate())) {
+                        if (from != null && to !=null) {
+                            if (from.before(obs.getDate()) && to.after(obs.getDate())) {
 
-                        obsList.add(obs);
-                        obsAndMedStat.add(obs);
+                                obsList.add(obs);
+                                obsAndMedStat.add(obs);
+
+                            }
+                        }
+                        else {
+                            obsList.add(obs);
+                            obsAndMedStat.add(obs);
+                        }
+
 
                     }
-                }
-                else {
-                    obsList.add(obs);
-                    obsAndMedStat.add(obs);
-                }
-
-
-            }
 
         }
         return  obsAndMedStat;
@@ -303,7 +323,7 @@ public class PatientDetailsController  {
         myLineChart.setVerticalGridLinesVisible(false);
         myLineChart.setVerticalZeroLineVisible(false);
         myLineChart.setHorizontalZeroLineVisible(false);
-       //wart
+        //wart
         NumberAxis rangeAxis = (NumberAxis)myLineChart.getYAxis();
         rangeAxis.setUpperBound(2.0);
         rangeAxis.setLowerBound(0.0);
@@ -313,14 +333,14 @@ public class PatientDetailsController  {
         myObservation obs=null;
 
         ObservableList<XYChart.Data<String, Number>> dataObservableList = FXCollections.observableArrayList();
-       // System.out.println("XXX" + sortedList.size());
+        // System.out.println("XXX" + sortedList.size());
 
         //dodanie warat na osi X
         for (int i = 0; i < sortedList.size(); i++) {
             XYChart.Data<String, Number> data ;
             if(sortedList.get(i) instanceof myMedicationStatement) {
                 medS= (myMedicationStatement) sortedList.get(i);
-            data = new XYChart.Data<>(medS.getDate().toString(), 1);
+                data = new XYChart.Data<>(medS.getDate().toString(), 1);
             }
             else {
                 obs = (myObservation )sortedList.get(i);
@@ -339,10 +359,10 @@ public class PatientDetailsController  {
                 else if (obs!=null){
                     region.setBackground(new Background(new BackgroundImage(new Image(new FileInputStream(new File(getClass().getResource("/lupa.png").toURI()))), null, null, null, null)));
                 }
-                }
-        catch (Exception e) {
-            System.out.println("Nie ustawilem backgroundu");
-        }
+            }
+            catch (Exception e) {
+                System.out.println("Nie ustawilem backgroundu");
+            }
 
             data.setNode(region);
             dataObservableList.add(data);
